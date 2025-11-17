@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, ListTodo, DollarSign, Gift } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (!loading && !isAdmin) {
-      navigate('/dashboard');
+      navigate('/not-authorized');
     }
   }, [isAdmin, loading, navigate]);
 
@@ -52,7 +52,7 @@ const AdminDashboard = () => {
   };
 
   if (loading) {
-    return <Layout><div>Loading...</div></Layout>;
+    return <AdminLayout><div>Loading...</div></AdminLayout>;
   }
 
   if (!isAdmin) {
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <Layout>
+    <AdminLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
@@ -128,7 +128,7 @@ const AdminDashboard = () => {
           })}
         </div>
       </div>
-    </Layout>
+    </AdminLayout>
   );
 };
 

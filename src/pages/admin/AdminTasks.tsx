@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,7 +42,7 @@ const AdminTasks = () => {
 
   useEffect(() => {
     if (!loading && !isAdmin) {
-      navigate('/dashboard');
+      navigate('/not-authorized');
     }
   }, [isAdmin, loading, navigate]);
 
@@ -149,11 +149,11 @@ const AdminTasks = () => {
   };
 
   if (loading || !isAdmin) {
-    return <Layout><div>Loading...</div></Layout>;
+    return <AdminLayout><div>Loading...</div></AdminLayout>;
   }
 
   return (
-    <Layout>
+    <AdminLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -311,7 +311,7 @@ const AdminTasks = () => {
           </form>
         </DialogContent>
       </Dialog>
-    </Layout>
+    </AdminLayout>
   );
 };
 

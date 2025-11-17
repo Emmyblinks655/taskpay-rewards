@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,7 @@ const AdminSubmissions = () => {
   const [submissions, setSubmissions] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!loading && !isAdmin) navigate('/dashboard');
+    if (!loading && !isAdmin) navigate('/not-authorized');
     if (isAdmin) fetchSubmissions();
   }, [isAdmin, loading]);
 
@@ -42,10 +42,10 @@ const AdminSubmissions = () => {
     }
   };
 
-  if (loading || !isAdmin) return <Layout><div>Loading...</div></Layout>;
+  if (loading || !isAdmin) return <AdminLayout><div>Loading...</div></AdminLayout>;
 
   return (
-    <Layout>
+    <AdminLayout>
       <div className="space-y-6">
         <h1 className="text-3xl font-bold">Task Submissions</h1>
         <div className="space-y-4">
@@ -76,7 +76,7 @@ const AdminSubmissions = () => {
           ))}
         </div>
       </div>
-    </Layout>
+    </AdminLayout>
   );
 };
 
