@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { taskSchema } from '@/lib/validationSchemas';
 
 interface Task {
   id: string;
@@ -72,19 +73,20 @@ const AdminTasks = () => {
     setSubmitting(true);
 
     try {
-      const taskData = {
+      // Validate input
+      const validated = taskSchema.parse({
         title: formData.title,
         description: formData.description,
         link: formData.link,
         reward: parseFloat(formData.reward),
-        type: formData.type as 'twitter_follow' | 'instagram_follow' | 'youtube_subscribe' | 'telegram_join' | 'platform_signup' | 'visit_url',
+        type: formData.type,
         status: formData.status,
-      };
+      });
 
       if (editingTask) {
         const { error } = await supabase
           .from('tasks')
-          .update(taskData)
+          .update(validated as any)
           .eq('id', editingTask.id);
 
         if (error) throw error;
@@ -92,7 +94,7 @@ const AdminTasks = () => {
       } else {
         const { error } = await supabase
           .from('tasks')
-          .insert(taskData);
+          .insert([validated as any]);
 
         if (error) throw error;
         toast.success('Task created successfully');
@@ -111,7 +113,11 @@ const AdminTasks = () => {
       fetchTasks();
     } catch (error: any) {
       console.error('Error saving task:', error);
-      toast.error(error.message || 'Failed to save task');
+      if (error.errors) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error(error.message || 'Failed to save task');
+      }
     } finally {
       setSubmitting(false);
     }

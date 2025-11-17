@@ -29,16 +29,16 @@ const AdminSubmissions = () => {
 
   const handleApprove = async (submission: any) => {
     try {
-      await supabase.from('task_submissions').update({ status: 'approved' }).eq('id', submission.id);
+      const { error } = await supabase.rpc('approve_task_submission', { 
+        submission_id: submission.id 
+      });
       
-      const { data: profile } = await supabase.from('profiles').select('balance').eq('id', submission.user_id).single();
-      const newBalance = (Number(profile?.balance) || 0) + Number(submission.tasks.reward);
-      await supabase.from('profiles').update({ balance: newBalance }).eq('id', submission.user_id);
+      if (error) throw error;
       
-      toast.success('Submission approved');
+      toast.success('Submission approved and reward added');
       fetchSubmissions();
-    } catch (error) {
-      toast.error('Failed to approve');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to approve submission');
     }
   };
 

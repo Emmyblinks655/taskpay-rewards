@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { freeAccountSchema } from '@/lib/validationSchemas';
 
 const AdminAccounts = () => {
   const { isAdmin, loading } = useAuth();
@@ -29,10 +30,22 @@ const AdminAccounts = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await supabase.from('free_accounts').insert(formData);
-    toast.success('Account added');
-    setShowDialog(false);
-    fetchAccounts();
+    try {
+      // Validate input
+      const validated = freeAccountSchema.parse(formData);
+      
+      await supabase.from('free_accounts').insert([validated as any]);
+      toast.success('Account added successfully');
+      setShowDialog(false);
+      setFormData({ platform_name: '', username: '', password: '' });
+      fetchAccounts();
+    } catch (error: any) {
+      if (error.errors) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error('Failed to add account');
+      }
+    }
   };
 
   if (loading || !isAdmin) return <AdminLayout><div>Loading...</div></AdminLayout>;
