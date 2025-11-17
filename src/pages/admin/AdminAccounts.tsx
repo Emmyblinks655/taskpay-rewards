@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -18,7 +18,7 @@ const AdminAccounts = () => {
   const [formData, setFormData] = useState({ platform_name: '', username: '', password: '' });
 
   useEffect(() => {
-    if (!loading && !isAdmin) navigate('/dashboard');
+    if (!loading && !isAdmin) navigate('/not-authorized');
     if (isAdmin) fetchAccounts();
   }, [isAdmin, loading]);
 
@@ -35,10 +35,10 @@ const AdminAccounts = () => {
     fetchAccounts();
   };
 
-  if (loading || !isAdmin) return <Layout><div>Loading...</div></Layout>;
+  if (loading || !isAdmin) return <AdminLayout><div>Loading...</div></AdminLayout>;
 
   return (
-    <Layout>
+    <AdminLayout>
       <div className="space-y-6">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold">Free Accounts</h1>
@@ -76,7 +76,7 @@ const AdminAccounts = () => {
           </form>
         </DialogContent>
       </Dialog>
-    </Layout>
+    </AdminLayout>
   );
 };
 
