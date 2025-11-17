@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { ExternalLink, Upload, DollarSign } from 'lucide-react';
+import { taskSubmissionSchema } from '@/lib/validationSchemas';
 
 interface Task {
   id: string;
@@ -57,6 +58,32 @@ const Tasks = () => {
 
     setSubmitting(true);
     try {
+      // Validate submission data
+      const validationResult = taskSubmissionSchema.safeParse({
+        username_proof: usernameProof,
+        proof_image: proofImage ? 'file' : undefined
+      });
+
+      if (!validationResult.success) {
+        toast.error(validationResult.error.errors[0].message);
+        setSubmitting(false);
+        return;
+      }
+
+      // Validate file size if image is provided
+      if (proofImage && proofImage.size > 5 * 1024 * 1024) {
+        toast.error('Image must be less than 5MB');
+        setSubmitting(false);
+        return;
+      }
+
+      // Validate file type
+      if (proofImage && !['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(proofImage.type)) {
+        toast.error('Only JPG, PNG, and WEBP images are allowed');
+        setSubmitting(false);
+        return;
+      }
+
       let proofImageUrl = null;
 
       // Upload image if provided

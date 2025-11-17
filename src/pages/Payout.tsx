@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Wallet, DollarSign } from 'lucide-react';
+import { payoutSchema } from '@/lib/validationSchemas';
 
 interface PayoutRequest {
   id: string;
@@ -71,26 +72,28 @@ const Payout = () => {
     e.preventDefault();
     if (!user) return;
 
-    const payoutAmount = parseFloat(amount);
-    if (payoutAmount > balance) {
-      toast.error('Insufficient balance');
-      return;
-    }
-
-    if (payoutAmount < 10) {
-      toast.error('Minimum payout amount is $10');
-      return;
-    }
-
     setSubmitting(true);
     try {
+      // Validate input
+      const validated = payoutSchema.parse({
+        amount: parseFloat(amount),
+        method,
+        accountDetails
+      });
+
+      if (validated.amount > balance) {
+        toast.error('Insufficient balance');
+        setSubmitting(false);
+        return;
+      }
+
       const { error } = await supabase
         .from('payout_requests')
         .insert({
           user_id: user.id,
-          amount: payoutAmount,
-          method: method as 'bank' | 'crypto' | 'mobile_money',
-          details: { account: accountDetails } as any,
+          amount: validated.amount,
+          method: validated.method as 'bank' | 'crypto' | 'mobile_money',
+          details: { account: validated.accountDetails } as any,
         });
 
       if (error) throw error;
@@ -103,7 +106,11 @@ const Payout = () => {
       fetchBalance();
     } catch (error: any) {
       console.error('Error submitting payout:', error);
-      toast.error(error.message || 'Failed to submit payout request');
+      if (error.errors) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error(error.message || 'Failed to submit payout request');
+      }
     } finally {
       setSubmitting(false);
     }

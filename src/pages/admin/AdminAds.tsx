@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { adSchema } from '@/lib/validationSchemas';
 
 const AdminAds = () => {
   const { isAdmin, loading } = useAuth();
@@ -42,31 +43,29 @@ const AdminAds = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (formData.placement.length === 0) {
-      toast.error('Please select at least one placement');
-      return;
+    try {
+      // Validate input
+      const validated = adSchema.parse(formData);
+      
+      if (editingAd) {
+        await supabase.from('ads').update(validated as any).eq('id', editingAd.id);
+        toast.success('Ad updated successfully');
+      } else {
+        await supabase.from('ads').insert([validated as any]);
+        toast.success('Ad created successfully');
+      }
+
+      setShowDialog(false);
+      setEditingAd(null);
+      setFormData({ ad_name: '', ad_type: 'code', ad_content: '', placement: [], status: true });
+      fetchAds();
+    } catch (error: any) {
+      if (error.errors) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error('Failed to save ad');
+      }
     }
-
-    const adData = {
-      ad_name: formData.ad_name,
-      ad_type: formData.ad_type,
-      ad_content: formData.ad_content,
-      placement: formData.placement,
-      status: formData.status,
-    };
-
-    if (editingAd) {
-      await supabase.from('ads').update(adData).eq('id', editingAd.id);
-      toast.success('Ad updated successfully');
-    } else {
-      await supabase.from('ads').insert(adData);
-      toast.success('Ad created successfully');
-    }
-
-    setShowDialog(false);
-    setEditingAd(null);
-    setFormData({ ad_name: '', ad_type: 'code', ad_content: '', placement: [], status: true });
-    fetchAds();
   };
 
   const handleDelete = async (id: string) => {
