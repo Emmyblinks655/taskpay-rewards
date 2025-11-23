@@ -1,1 +1,13 @@
 project_id = "tbiogfmgjxvslgbdhjeg"
+
+[functions.process-vtu-order]
+verify_jwt = true
+
+[functions.send-otp]
+verify_jwt = false
+
+[functions.verify-otp]
+verify_jwt = false
+
+[functions.notify-users]
+verify_jwt = true
