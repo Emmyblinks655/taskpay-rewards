@@ -15,6 +15,9 @@ const Layout = ({ children }: LayoutProps) => {
 
   const userNavItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { href: '/services', icon: Coins, label: 'Services' },
+    { href: '/wallet', icon: DollarSign, label: 'Wallet' },
+    { href: '/referrals', icon: Gift, label: 'Referrals' },
     { href: '/tasks', icon: ListTodo, label: 'Tasks' },
     { href: '/free-accounts', icon: Gift, label: 'Free Accounts' },
     { href: '/payout', icon: DollarSign, label: 'Payout' },

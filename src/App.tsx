@@ -10,12 +10,19 @@ import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import FreeAccounts from "./pages/FreeAccounts";
 import Payout from "./pages/Payout";
+import Services from "./pages/Services";
+import Wallet from "./pages/Wallet";
+import Referrals from "./pages/Referrals";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminTasks from "./pages/admin/AdminTasks";
 import AdminSubmissions from "./pages/admin/AdminSubmissions";
 import AdminPayouts from "./pages/admin/AdminPayouts";
 import AdminAccounts from "./pages/admin/AdminAccounts";
 import AdminAds from "./pages/admin/AdminAds";
+import AdminVTUOrders from "./pages/admin/AdminVTUOrders";
+import AdminVTUServices from "./pages/admin/AdminVTUServices";
+import AdminVTUProviders from "./pages/admin/AdminVTUProviders";
+import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/NotFound";
 import NotAuthorized from "./pages/NotAuthorized";
 
@@ -35,12 +42,19 @@ const App = () => (
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/free-accounts" element={<FreeAccounts />} />
             <Route path="/payout" element={<Payout />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/referrals" element={<Referrals />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/tasks" element={<AdminTasks />} />
             <Route path="/admin/submissions" element={<AdminSubmissions />} />
             <Route path="/admin/payouts" element={<AdminPayouts />} />
             <Route path="/admin/accounts" element={<AdminAccounts />} />
             <Route path="/admin/ads" element={<AdminAds />} />
+            <Route path="/admin/vtu-orders" element={<AdminVTUOrders />} />
+            <Route path="/admin/vtu-services" element={<AdminVTUServices />} />
+            <Route path="/admin/vtu-providers" element={<AdminVTUProviders />} />
+            <Route path="/admin/settings" element={<AdminSettings />} />
             <Route path="/not-authorized" element={<NotAuthorized />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

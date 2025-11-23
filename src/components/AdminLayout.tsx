@@ -8,7 +8,9 @@ import {
   DollarSign, 
   Gift, 
   Image,
-  LogOut
+  LogOut,
+  Server,
+  Settings
 } from 'lucide-react';
 import {
   Sidebar,
@@ -26,11 +28,15 @@ import { Button } from '@/components/ui/button';
 
 const adminMenuItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
+  { title: 'VTU Orders', url: '/admin/vtu-orders', icon: ListTodo },
+  { title: 'VTU Services', url: '/admin/vtu-services', icon: Gift },
+  { title: 'VTU Providers', url: '/admin/vtu-providers', icon: Server },
   { title: 'Tasks', url: '/admin/tasks', icon: ListTodo },
   { title: 'Submissions', url: '/admin/submissions', icon: CheckSquare },
   { title: 'Payouts', url: '/admin/payouts', icon: DollarSign },
   { title: 'Free Accounts', url: '/admin/accounts', icon: Gift },
   { title: 'Ads', url: '/admin/ads', icon: Image },
+  { title: 'Settings', url: '/admin/settings', icon: Settings },
 ];
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {
